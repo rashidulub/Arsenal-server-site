@@ -33,11 +33,22 @@ async function run() {
     await client.connect();
 
     const menuCollection = client.db('summerDb').collection('menu')
+    const classesCollection = client.db('summerDb').collection('classes')
 
     app.get('/menu',async(req,res)=>{
         const result = await menuCollection.find().toArray();
         res.send(result)
     })
+
+    app.post('/classes', async(req,res)=>{
+        const item = req.body;
+        console.log(item);
+        const result = await classesCollection.insertOne(item)
+        res.send(result)
+
+    })
+
+
 
 
     // Send a ping to confirm a successful connection
