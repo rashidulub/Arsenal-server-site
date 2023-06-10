@@ -16,7 +16,7 @@ app.get('/',(req,res)=>{
 
 
 
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.bpxo3nu.mongodb.net/?retryWrites=true&w=majority`;
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
@@ -51,6 +51,7 @@ async function run() {
 
 
 
+
     app.post('/user',async(req,res)=>{
       const user = req.body;
       const query ={email: user.email}
@@ -59,6 +60,34 @@ async function run() {
         return res.send ({message: 'user already existing'})
       }
       const result = await userCollection.insertOne(user)
+      res.send(result)
+    })
+
+    // made admin 
+
+    app.patch('/user/admin/:id', async(req,res)=>{
+      const id  = req.params.id;
+      const filter = {_id: new ObjectId (id)}
+      const updateDoc = {
+        $set: {
+          role : 'admin'
+        }
+      };
+      const result = await userCollection.updateOne(filter, updateDoc);
+      res.send(result)
+    })
+
+    // made instructor
+
+    app.patch('/user/instructor/:id', async(req,res)=>{
+      const id  = req.params.id;
+      const filter = {_id: new ObjectId (id)}
+      const updateDoc = {
+        $set: {
+          role : 'instructor'
+        }
+      };
+      const result = await userCollection.updateOne(filter, updateDoc);
       res.send(result)
     })
 
