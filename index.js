@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const cors = require('cors');
 require('dotenv').config()
+const stripe = require('stripe')(process.env.PAYMENT_SECRET_KEY)
 const port = process.env.PORT || 5000;
 
 
@@ -48,6 +49,17 @@ async function run() {
 
     })
 
+    // app.get('/classes',async(req,res)=>{
+    //   const email =req.query.email;
+    //   console.log(email);
+    //   if(!email){
+    //     res.send([])
+    //   }
+    //   const query = {email: email}; 
+    //   const result = await classesCollection.find(query).toArray();
+    //   res.send(result);
+    // })
+
     app.get('/classes', async(req,res)=>{
       console.log(req.query.email);
       let query = {}
@@ -61,11 +73,27 @@ async function run() {
 
     // delete classes 
 
-    app.delete('/classes/id', async(req,res)=>{
+    app.delete('/classes/:id', async(req,res)=>{
       const id= req.params.id;
       const query = { _id: new Object(id)};
       const result = await classesCollection.deleteOne(query);
       res.send(result)
+    })
+
+    // create payment intent
+
+    app.post('/create-payment-intent', async(req,res)=>{
+      const {price}= req.body;
+      const amount = price*100;
+      const paymentIntent = await stripe.paymentIntents.create({
+        amount : amount,
+        currency : 'usd',
+        payment_method_types: ['card'] 
+      });
+      res.send({
+        clientSecret : paymentIntent.client_secret
+      })
+
     })
 
 
