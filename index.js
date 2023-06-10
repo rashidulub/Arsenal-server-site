@@ -37,11 +37,29 @@ async function run() {
     const menuCollection = client.db('summerDb').collection('menu')
     const classesCollection = client.db('summerDb').collection('classes')
     const userCollection = client.db('summerDb').collection('user')
+    const addClassCollection = client.db('summerDb').collection('addClass')
 
     app.get('/menu',async(req,res)=>{
         const result = await menuCollection.find().toArray();
         res.send(result)
     })
+
+
+    app.get('/addClass', async(req,res)=>{
+      const cursor = addClassCollection.find();
+      const result = await cursor.toArray();
+      res.send(result)
+    })
+
+
+
+    app.post('/addClass',async(req,res)=>{
+      const newClass = req.body;
+      const result = await addClassCollection.insertOne(newClass);
+      res.send(result)
+    })
+
+
 
     // user related api 
 
