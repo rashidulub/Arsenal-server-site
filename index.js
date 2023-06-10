@@ -80,8 +80,9 @@ async function run() {
       const user = await userCollection.findOne(query)
        const result = {admin: user?.role === 'admin'}
        res.send(result)
-     })
+     })  
 
+    
 
 
     app.patch('/user/admin/:id', async(req,res)=>{
@@ -97,6 +98,15 @@ async function run() {
     })
 
     // made instructor
+
+    app.get('/user/instructor/:email', async(req,res)=>{
+      const email =  req.params.email;
+      const query = {email: email}
+      const user = await userCollection.findOne(query)
+       const result = {admin: user?.role === 'instructor'}
+       res.send(result)
+     })    
+
 
     app.patch('/user/instructor/:id', async(req,res)=>{
       const id  = req.params.id;
