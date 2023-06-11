@@ -60,6 +60,42 @@ async function run() {
     })
 
 
+    app.patch('/addClass/Approved/:id', async(req,res)=>{
+      const id  = req.params.id;
+      const filter = {_id: new ObjectId (id)}
+      const updateDoc = {
+        $set: {
+          role : 'Approved'
+        }
+      };
+      const result = await addClassCollection.updateOne(filter, updateDoc);
+      res.send(result)
+    })
+
+    app.patch('/addClass/Deny/:id', async(req,res)=>{
+      const id  = req.params.id;
+      const filter = {_id: new ObjectId (id)}
+      const updateDoc = {
+        $set: {
+          role : 'Deny'
+        }
+      };
+      const result = await addClassCollection.updateOne(filter, updateDoc);
+      res.send(result)
+    })
+    app.patch('/addClass/Feedback/:id', async(req,res)=>{
+      const id  = req.params.id;
+      const filter = {_id: new ObjectId (id)}
+      const updateDoc = {
+        $set: {
+          role : 'Feedback'
+        }
+      };
+      const result = await addClassCollection.updateOne(filter, updateDoc);
+      res.send(result)
+    })
+
+
 
     // user related api 
 
